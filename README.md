@@ -1,2 +1,2 @@
-# android_graphql
+# android graphql
 GraphQL android sample with Hasura cloud
