@@ -1,0 +1,16 @@
+{
+  "name": "Expenses Schema",
+  "schemaPath": "schema.json",
+  "extensions": {
+    "endpoints": {
+      "Default GraphQL Endpoint": {
+        "url": "https://star-hen-48.hasura.app/v1/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL",
+          "x-hasura-admin-secret" : "42vUA4kUsBVgYMOS9M9LT68zI30lPhQE4VWqbTQ1Yu5tpop1PKvcQwkhHfzVlZqB"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

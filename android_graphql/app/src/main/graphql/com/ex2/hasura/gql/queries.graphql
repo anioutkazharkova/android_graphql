@@ -1,0 +1,99 @@
+query PostsQuery {
+    posts {
+        ... Post
+    }
+}
+
+mutation AddPostMutation($postId: uuid, $text: String, $image: String, $user: String, $userId: uuid, $date: date) {
+    insert_posts_one(object: {date: $date, image_link: $image, post_id: $postId, post_text: $text, user_id: $userId, user_name: $user}) {
+       ... Post
+    }
+}
+
+mutation DeletePost($postId: uuid!) {
+    delete_posts_by_pk(post_id: $postId){
+        post_id
+    }
+    delete_comments(where: {post_id: {_eq: $postId}}) {
+        returning {
+            comment_id
+        }
+    }
+}
+
+query Users {
+    users {
+       ... User
+    }
+}
+
+query GetPostQuery($postId: uuid) {
+    posts(where: {post_id: {_eq: $postId}}) {
+        ... Post
+    }
+    likes(where: {post_id: {_eq: $postId}}){
+        ... LikeForPost
+    }
+    comments(where: {post_id: {_eq: $postId}}){
+        ... Comment
+    }
+}
+
+mutation CreateUserMutation($name: String, $id: uuid, $email: String, $password: String) {
+    insert_users_one(object: {user_email: $email, user_id: $id, user_name: $name, password: $password}) {
+        ... User
+    }
+}
+
+query User($email: String, $password: String) {
+    users(where: {password: {_eq: $password}, user_email: {_eq: $email}}) {
+       ... User
+    }
+}
+
+query Likes($postId: uuid) {
+    likes(where: {post_id: {_eq: $postId}}){
+        ... LikeForPost
+    }
+}
+
+query Comments($commentId: uuid) {
+    comments(where: {post_id: {_eq: $commentId}}) {
+        ... Comment
+    }
+}
+
+mutation  ChangeLikeMutation($postId: uuid, $likes: String) {
+    update_posts(where: {post_id: {_eq: $postId}} _set: {likes: $likes}) {
+        __typename
+    }
+}
+
+mutation  ChangePostMutation($postId: uuid!, $postText: String, $imageLink: String) {
+    update_posts(where: {post_id: {_eq: $postId}} _set: {post_text: $postText, image_link: $imageLink}) {
+        __typename
+    }
+}
+
+mutation CreateComment($postId: uuid, $commentText: String, $id: uuid, $userId: uuid, $userName: String) {
+    insert_comments_one(object: {post_id: $postId, comment_text: $commentText, comment_id: $id, user_id: $userId, user_name: $userName }) {
+        ... Comment
+    }
+}
+
+
+fragment User on users {
+    user_email, user_id, user_name, likes
+}
+
+fragment Comment on comments {
+    comment_id, comment_text, user_id, post_id, user_name
+}
+
+fragment Post on posts {
+    post_id, post_text, user_id, user_name, likes, date, image_link
+}
+
+fragment LikeForPost on likes {
+    post_id, user_id
+}
